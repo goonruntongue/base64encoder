@@ -37,13 +37,19 @@
         
         .result {
             word-break: break-all;
+            width: 100%;
+            display: none;
         }
         
         .result.on {
             border: 1px solid lightgray;
             padding: 0.5em;
-            border-radius: 15px;
+            /* border-radius: 15px; */
             background: #ffffffbb;
+            display: block;
+            margin: 1em 0;
+            min-height: 50vh;
+            font-family: var(--fontSet);
         }
         
         .container {
@@ -86,15 +92,12 @@
 </head>
 
 <body>
-
     <div class="container">
         <h1>DataURL(base64)変換ツール</h1>
         <input type="file" name="" id="file-input">
         <p class="alertKey">コードをクリップボードにコピーしました。</p>
-        <p class="result"></p>
-        <pre class="prettyprint linenums">
-&lt;script&gt;
-//DataURLへの変換コード
+        <textarea class="result"></textarea>
+        <pre class="prettyprint linenums">&lt;script &gt;//DataURLへの変換コード
 $("#file-input").on("change", e => { //ファイルアップロード時のイベント設定
     let file = e.target.files[0]; //ファイルの内容を取得
     if (!file) { //適応できない場合、プログラムを停止
@@ -109,8 +112,7 @@ $("#file-input").on("change", e => { //ファイルアップロード時のイ�
     }
     reader.readAsDataURL(file);//実際にDataURLとしてファイルを読み込みを発火
 })
-&lt;/script&gt;
-</pre>
+&lt;/script &gt;</pre>
     </div>
     <!--jQuery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -125,12 +127,15 @@ $("#file-input").on("change", e => { //ファイルアップロード時のイ�
             reader.onload = e => {
                 let base64 = e.target.result;
                 console.log(base64);
-                $("p.result").text(base64);
+                $(".result").text(base64);
                 navigator.clipboard.writeText(base64);
             }
             reader.readAsDataURL(file);
             $(".alertKey").fadeIn().delay(1000).fadeOut();
             $(".result").addClass("on");
+            $(".result").on("click", function() {
+                $(this).select();
+            })
         })
     </script>
     <!--Google Code Prettify-->
@@ -250,6 +255,45 @@ $("#file-input").on("change", e => { //ファイルアップロード時のイ�
             },
             "retina_detect": true
         });
+    </script>
+    <!-- Code injected by live-server -->
+    <script>
+        // <![CDATA[  <-- For SVG support
+        if ('WebSocket' in window) {
+            (function() {
+                function refreshCSS() {
+                    var sheets = [].slice.call(document.getElementsByTagName("link"));
+                    var head = document.getElementsByTagName("head")[0];
+                    for (var i = 0; i < sheets.length; ++i) {
+                        var elem = sheets[i];
+                        var parent = elem.parentElement || head;
+                        parent.removeChild(elem);
+                        var rel = elem.rel;
+                        if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+                            var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+                            elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+                        }
+                        parent.appendChild(elem);
+                    }
+                }
+                var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+                var address = protocol + window.location.host + window.location.pathname + '/ws';
+                var socket = new WebSocket(address);
+                socket.onmessage = function(msg) {
+                    if (msg.data == 'reload')
+                        window.location.reload();
+                    else if (msg.data == 'refreshcss')
+                        refreshCSS();
+                };
+                if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+                    console.log('Live reload enabled.');
+                    sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+                }
+            })();
+        } else {
+            console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+        }
+        // ]]>
     </script>
 </body>
 
